@@ -1,0 +1,294 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Reto tecnico",
+    "description": "Coleccion de apis del reto tecnico",
+    "contact": {
+      "name": "Paul David Tocto Zamora",
+      "email": "dtoctoz@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://xraww3kx77.execute-api.us-east-1.amazonaws.com/",
+      "description": "Endpoint AWS"
+    },
+    {
+      "url": "https://virtserver.swaggerhub.com/DavidToctoZ/reto_documentacion/1.0.0",
+      "description": "SwaggerHub API Auto Mocking"
+    }
+  ],
+  "tags": [
+    {
+      "name": "APIS Reto tecnico"
+    }
+  ],
+  "paths": {
+    "/obtener_info": {
+      "get": {
+        "tags": [
+          "APIS Reto tecnico"
+        ],
+        "summary": "Integra la api SWAPI y una base de datos dynamo que guarda registros de personas",
+        "description": "Se puede obtener data de la API SWAPI acerca de las peliculas de STAR WARS, opcionalmente se puede colocar los siguiente parametros para obtener informacion por pelicula o informacion de las personas guardadas en el dynamo\n",
+        "operationId": "obtener_info",
+        "parameters": [
+          {
+            "name": "ver_personas",
+            "in": "query",
+            "description": "Ingresa un parametro para ver las personas guardadas en base de datos, debe ser 1 para visualizar la informacion (opcional)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "episodio_id",
+            "in": "query",
+            "description": "Ingresa el id del episodio de star wars solo para ver su informacion asociada (opcional)",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Output OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ObtenerInfo"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Ocurrio un error"
+          }
+        }
+      }
+    },
+    "/mostrar_personas": {
+      "get": {
+        "tags": [
+          "APIS Reto tecnico"
+        ],
+        "summary": "Muestra a las personas almacenadas en un Dynamo DB",
+        "description": "No requiere parametros\n",
+        "operationId": "mostrar_personas",
+        "responses": {
+          "200": {
+            "description": "Output OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MostrarPersonas"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/registrar_persona": {
+      "post": {
+        "tags": [
+          "APIS Reto tecnico"
+        ],
+        "summary": "agrega datos de una persona a una BD dynamo",
+        "description": "Agrega un elemento a una BD Dynamo",
+        "operationId": "registrar_persona",
+        "requestBody": {
+          "description": "Inventory item to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/registrar_persona_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Elemento insertado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ObtenerInfo": {
+        "properties": {
+          "personas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObtenerInfo_personas"
+            }
+          },
+          "infoMovies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObtenerInfo_infoMovies"
+            }
+          }
+        }
+      },
+      "MostrarPersonas": {
+        "properties": {
+          "personas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObtenerInfo_personas"
+            }
+          }
+        }
+      },
+      "registrar_persona_body": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "default": "David"
+          },
+          "apellido": {
+            "type": "string",
+            "default": "Apellidos"
+          },
+          "edad": {
+            "type": "integer",
+            "default": 25
+          },
+          "profesion": {
+            "type": "string",
+            "default": "Ingeniero"
+          }
+        }
+      },
+      "inline_response_200": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "default": "Se creo exitosamente"
+          },
+          "elemento": {
+            "$ref": "#/components/schemas/inline_response_200_elemento"
+          }
+        }
+      },
+      "ObtenerInfo_personas": {
+        "type": "object",
+        "properties": {
+          "id_persona": {
+            "type": "string"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "apellido": {
+            "type": "string"
+          },
+          "edad": {
+            "type": "string"
+          },
+          "profesion": {
+            "type": "string"
+          }
+        }
+      },
+      "ObtenerInfo_infoMovies": {
+        "type": "object",
+        "properties": {
+          "titulo": {
+            "type": "string"
+          },
+          "episodio_id": {
+            "type": "string"
+          },
+          "rastreo_de_apertura": {
+            "type": "string"
+          },
+          "productor": {
+            "type": "string"
+          },
+          "fecha_de_lanzamiento": {
+            "type": "string"
+          },
+          "personajes": {
+            "type": "string"
+          },
+          "planetas": {
+            "type": "string"
+          },
+          "naves_espaciales": {
+            "type": "string"
+          },
+          "vehiculos": {
+            "type": "string"
+          },
+          "especies": {
+            "type": "string"
+          },
+          "creacion": {
+            "type": "string"
+          },
+          "edicion": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "inline_response_200_elemento": {
+        "type": "object",
+        "properties": {
+          "id_persona": {
+            "type": "string",
+            "default": "62e3de8-99c4-4f99-9f15-2a67f1381"
+          },
+          "nombre": {
+            "type": "string",
+            "default": "David"
+          },
+          "apellido": {
+            "type": "string",
+            "default": "Apellidos"
+          },
+          "edad": {
+            "type": "integer",
+            "default": 25
+          },
+          "profesion": {
+            "type": "string",
+            "default": "Ingeniero"
+          }
+        }
+      }
+    }
+  }
+}

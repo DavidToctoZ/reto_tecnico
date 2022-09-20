@@ -1,0 +1,36 @@
+service: serverless-api-reto
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  iam:
+    # Instruct Serverless to use an existing IAM role for all Lambda functions
+    role: arn:aws:iam::046743457047:role/desarrollo
+
+functions:
+  registrarpersona:
+    handler: registrar_persona/index.handler
+    name: registrar_persona
+    events:
+      - httpApi:
+          path: /registrar_persona
+          method: post
+
+  obtenerinfo:
+    handler: obtener_info_sw/index.handler
+    name: obtener_info
+    events:
+      - httpApi:
+          path: /obtener_info
+          method: get
+
+  mostrarpersonas:
+    handler: mostrar_personas/index.handler
+    name: mostrar_personas
+    events:
+      - httpApi:
+          path: /mostrar_personas
+          method: get
+plugins:
+  - serverless-offline
